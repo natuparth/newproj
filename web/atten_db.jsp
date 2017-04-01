@@ -26,42 +26,59 @@
         </div>
             
         </form>
+         
  <%
 String subj=request.getParameter("listy"); 
+int flag=0;
+if(subj==null)
+     
 session.putValue("listy",subj);
-out.println(subj);
+//out.println(""+subj);
 //String pwd=request.getParameter("pwd"); 
 Class.forName("com.mysql.jdbc.Driver"); 
 java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/project_web","root",""); 
-Statement st= con.createStatement(); 
-ResultSet rs,p;
+Statement st= con.createStatement();
+Statement rt= con.createStatement();
+ResultSet rs,tu;
 if(subj.equals("ADA_A"))
 {
-    rs = st.executeQuery("select ADA_A from Attendance");
-    p=st.executeQuery("select ADA from total_atten");
+    rs = st.executeQuery("select enroll,ADA_A from Attendance");
+    tu=rt.executeQuery("select ADA from total_atten");
+    tu.next();
+    rs.next();
 } 
 else if(subj.equals("SYSTEM_P"))
 {
-    rs = st.executeQuery("select SYSTEM_P from Attendance"); 
-    p=st.executeQuery("select SYS from total_atten");
-}
+    rs = st.executeQuery("select enroll,SYSTEM_P from Attendance");
+    tu=rt.executeQuery("select SYS from total_atten");
+    tu.next();
+    rs.next();
+} 
 else if(subj.equals("OS"))
 {
-    rs = st.executeQuery("select OS from Attendance");
-    p=st.executeQuery("select OS from total_atten");
+    rs = st.executeQuery("select enroll,OS from Attendance");
+    tu=rt.executeQuery("select OS from total_atten");
+    tu.next();
+    rs.next();
 } 
-else{
- rs = st.executeQuery("select WEB from Attendance"); 
-    p=st.executeQuery("select WEB from total_atten");
-
+else if(subj.equals("WEB"))
+{
+    rs = st.executeQuery("select enroll,WEB from Attendance");
+    tu=rt.executeQuery("select WEB from total_atten");
+    tu.next();
+    rs.next();
 }
-while(rs.next()) {
-//out.println("welcome"+rs.getString(1));  
+else{
+  out.print("welcome fellas");
+  flag=1;
+}
+ %>
+<% 
+    if(flag!=1){   
+out.print("<div align=\"center\"><table border=\"4\"> <caption>"+subj+" </caption><tr><th>name</th><th>attendance</th><th>total</th> </tr>");
+out.print("<tr> <td>"+rs.getString(1)+"</td><td>"+rs.getString(2)+"</td><td>" +tu.getString(1)+ "</td></tr></table></div>");
+    }
 %>
-<div class="two" style="text-align:  "><%=rs.getString(1)%></div>
-<br>
-<%}%>
-                 
     </body>
 </html>
 
